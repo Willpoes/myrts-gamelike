@@ -42,7 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -497,6 +498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
   m_AgentTypeID: 0
   m_CollectObjects: 1
   m_Size: {x: 96.29, y: 7.025, z: 127.91}
@@ -528,6 +530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
   m_AgentTypeID: -1372625422
   m_CollectObjects: 1
   m_Size: {x: 96.29, y: 7.025, z: 127.91}
@@ -625,6 +628,7 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!1001 &35992947
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19384,6 +19388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
   m_Size: {x: 48.934998, y: 11.078175, z: 60.303635}
   m_Center: {x: 1.8283157, y: 20.937994, z: 9.99609}
   m_Area: 1
