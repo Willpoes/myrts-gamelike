@@ -10,25 +10,36 @@ using System.Linq;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.LowLevel;
 
-namespace GameDevTV.RTS.Player
+namespace ideadores.RTS.Player
 {
     public class PlayerInput : MonoBehaviour
     {
         [SerializeField] private Rigidbody cameraTarget;
         [SerializeField] private CinemachineCamera cinemachineCamera;
+        private float rotationStartTime;
+        private Vector3 startingFollowOffset;
+        private float maxRotationAmount;
+        //*!
+        [SerializeField] private CameraConfig cameraConfig; //rotation speed, KeyboardPanSpeed, ZoomSpeed
+
+
         [SerializeField] private new Camera camera;
-        [SerializeField] private CameraConfig cameraConfig;
         [SerializeField] private LayerMask selectableUnitsLayers;
         [SerializeField] private LayerMask interactableLayers;
         [SerializeField] private LayerMask floorLayers;
         [SerializeField] private RectTransform selectionBox;
-        [SerializeField] [ColorUsage(showAlpha: true, hdr: true)]
+        [SerializeField]
+        [ColorUsage(showAlpha: true, hdr: true)]
+
         private Color errorTintColor = Color.red;
-        [SerializeField] [ColorUsage(showAlpha: true, hdr: true)]
-        private Color errorFresnelColor = new (4, 1.7f, 0, 2);
-        [SerializeField] [ColorUsage(showAlpha: true, hdr: true)]
-        private Color availableToPlaceTintColor = new (0.2f, 0.65f, 1, 2);
-        [SerializeField] [ColorUsage(showAlpha: true, hdr: true)]
+        [SerializeField]
+        [ColorUsage(showAlpha: true, hdr: true)]
+        private Color errorFresnelColor = new(4, 1.7f, 0, 2);
+        [SerializeField]
+        [ColorUsage(showAlpha: true, hdr: true)]
+        private Color availableToPlaceTintColor = new(0.2f, 0.65f, 1, 2);
+        [SerializeField]
+        [ColorUsage(showAlpha: true, hdr: true)]
         private Color availableToPlaceFresnelColor = new(4, 1.7f, 0, 2);
 
         private Vector2 startingMousePosition;
@@ -39,9 +50,6 @@ namespace GameDevTV.RTS.Player
         private bool wasMouseDownOnUI;
         private CinemachineFollow cinemachineFollow;
         private float zoomStartTime;
-        private float rotationStartTime;
-        private Vector3 startingFollowOffset;
-        private float maxRotationAmount;
         private HashSet<AbstractUnit> aliveUnits = new(100);
         private HashSet<AbstractUnit> addedUnits = new(24);
         private List<ISelectable> selectedUnits = new(12);
@@ -53,7 +61,7 @@ namespace GameDevTV.RTS.Player
         {
             if (!cinemachineCamera.TryGetComponent(out cinemachineFollow))
             {
-                Debug.LogError("Cinemachine Camera did not have CinemachineFollow. Zoom functionality will not work!");
+                Debug.LogError("Error! CinemachineFollow no esta adjntado a cinemachine camera");
             }
 
             startingFollowOffset = cinemachineFollow.FollowOffset;
@@ -106,9 +114,11 @@ namespace GameDevTV.RTS.Player
 
         private void Update()
         {
+            //panning and zooming with slerp and rotation 
             HandlePanning();
             HandleZooming();
             HandleRotation();
+
             HandleGhost();
             HandleRightClick();
             HandleDragSelect();
@@ -201,7 +211,7 @@ namespace GameDevTV.RTS.Player
         private void DeselectAllUnits()
         {
             ISelectable[] currentlySelectedUnits = selectedUnits.ToArray();
-            foreach(ISelectable selectable in currentlySelectedUnits)
+            foreach (ISelectable selectable in currentlySelectedUnits)
             {
                 selectable.Deselect();
             }
@@ -229,8 +239,8 @@ namespace GameDevTV.RTS.Player
             if (Mouse.current.rightButton.wasReleasedThisFrame
                 && Physics.Raycast(cameraRay, out RaycastHit hit, float.MaxValue, interactableLayers | floorLayers))
             {
-                List<AbstractUnit> abstractUnits = new (selectedUnits.Count);
-                foreach(ISelectable selectable in selectedUnits)
+                List<AbstractUnit> abstractUnits = new(selectedUnits.Count);
+                foreach (ISelectable selectable in selectedUnits)
                 {
                     if (selectable is AbstractUnit unit)
                     {
@@ -238,11 +248,11 @@ namespace GameDevTV.RTS.Player
                     }
                 }
 
-                for(int i = 0; i < abstractUnits.Count; i++)
+                for (int i = 0; i < abstractUnits.Count; i++)
                 {
                     CommandContext context = new(abstractUnits[i], hit, i, MouseButton.Right);
 
-                    foreach(ICommand command in GetAvailableCommands(abstractUnits[i]))
+                    foreach (ICommand command in GetAvailableCommands(abstractUnits[i]))
                     {
                         if (command.CanHandle(context))
                         {
@@ -266,7 +276,7 @@ namespace GameDevTV.RTS.Player
                 .ToArray();
 
             List<BaseCommand> allAvailableCommands = new();
-            foreach(OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
+            foreach (OverrideCommandsCommand overrideCommand in overrideCommandsCommands)
             {
                 allAvailableCommands.AddRange(overrideCommand.Commands
                     .Where(command => command is not OverrideCommandsCommand)
@@ -282,7 +292,7 @@ namespace GameDevTV.RTS.Player
 
         private void HandleLeftClick()
         {
-            if (camera == null) { return ; }
+            if (camera == null) { return; }
 
             Ray cameraRay = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
@@ -329,6 +339,7 @@ namespace GameDevTV.RTS.Player
             activeCommand = null;
         }
 
+        #region panning, rotation, zooming: slerp y funciones setting for the reset
         private void HandleRotation()
         {
             if (ShouldSetRotationStartTime())
@@ -388,17 +399,17 @@ namespace GameDevTV.RTS.Player
             }
 
             float zoomTime = Mathf.Clamp01((Time.time - zoomStartTime) * cameraConfig.ZoomSpeed);
-            Vector3 targetFollowOffset;
+            Vector3 targetFollowOffset; //
 
             if (Keyboard.current.endKey.isPressed)
             {
                 targetFollowOffset = new Vector3(
                     cinemachineFollow.FollowOffset.x,
-                    cameraConfig.MinZoomDistance,
+                    cameraConfig.MinZoomDistance,      // -> x y z
                     cinemachineFollow.FollowOffset.z
                 );
             }
-            else
+            else  //zoom in and zoom out a original pos
             {
                 targetFollowOffset = new Vector3(
                     cinemachineFollow.FollowOffset.x,
@@ -407,6 +418,7 @@ namespace GameDevTV.RTS.Player
                 );
             }
 
+            //funcion slerp 
             cinemachineFollow.FollowOffset = Vector3.Slerp(
                 cinemachineFollow.FollowOffset,
                 targetFollowOffset,
@@ -420,6 +432,11 @@ namespace GameDevTV.RTS.Player
                 || Keyboard.current.endKey.wasReleasedThisFrame;
         }
 
+        ////EARLY RETURN PATTERN EN HADLE PANNING
+        ///
+        ///The Early Return pattern is a coding technique 
+        ///where a function or method is stopped as 
+        ///soon as a specific condition is met and evaluates to true.
         private void HandlePanning()
         {
             Vector2 moveAmount = GetKeyboardMoveAmount();
@@ -428,37 +445,7 @@ namespace GameDevTV.RTS.Player
             cameraTarget.linearVelocity = new Vector3(moveAmount.x, 0, moveAmount.y);
         }
 
-        private Vector2 GetMouseMoveAmount()
-        {
-            Vector2 moveAmount = Vector2.zero;
-
-            if (!cameraConfig.EnableEdgePan) { return moveAmount; }
-
-            Vector2 mousePosition = Mouse.current.position.ReadValue();
-            int screenWidth = Screen.width;
-            int screenHeight = Screen.height;
-
-            if (mousePosition.x <= cameraConfig.EdgePanSize)
-            {
-                moveAmount.x -= cameraConfig.MousePanSpeed;
-            }
-            else if (mousePosition.x >= screenWidth - cameraConfig.EdgePanSize)
-            {
-                moveAmount.x += cameraConfig.MousePanSpeed;
-            }
-
-            if (mousePosition.y >= screenHeight - cameraConfig.EdgePanSize)
-            {
-                moveAmount.y += cameraConfig.MousePanSpeed;
-            }
-            else if (mousePosition.y <= cameraConfig.EdgePanSize)
-            {
-                moveAmount.y -= cameraConfig.MousePanSpeed;
-            }
-
-            return moveAmount;
-        }
-
+        ////handle the panning
         private Vector2 GetKeyboardMoveAmount()
         {
             Vector2 moveAmount = Vector2.zero;
@@ -482,5 +469,50 @@ namespace GameDevTV.RTS.Player
 
             return moveAmount;
         }
+
+        ////handle the panning 
+        private Vector2 GetMouseMoveAmount()
+        {
+            Vector2 moveAmount = Vector2.zero;
+
+            if (!cameraConfig.EnableEdgePan) { return moveAmount; }
+
+            Vector2 mousePosition = Mouse.current.position.ReadValue(); //cursor en screen
+                                                                        //resolution 
+            //1080
+            // ^
+            // |
+            // |
+            // 0- - - ->1920
+            int screenWidth = Screen.width;
+
+            int screenHeight = Screen.height;
+
+            if (mousePosition.x <= cameraConfig.EdgePanSize)
+            {
+                moveAmount.x -= cameraConfig.MousePanSpeed;
+            }
+            else if (mousePosition.x >= screenWidth - cameraConfig.EdgePanSize)
+            {
+                moveAmount.x += cameraConfig.MousePanSpeed;
+            }
+
+            if (mousePosition.y >= screenHeight - cameraConfig.EdgePanSize)
+            {
+                moveAmount.y += cameraConfig.MousePanSpeed;
+            }
+            else if (mousePosition.y <= cameraConfig.EdgePanSize)
+            {
+                moveAmount.y -= cameraConfig.MousePanSpeed;
+            }
+
+            return moveAmount;
+        }
+        #endregion
+
+
+
+
+
     }
 }

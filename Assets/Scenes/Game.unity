@@ -2283,7 +2283,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackerSettings:
     BindingMode: 1
-    PositionDamping: {x: 0, y: 0, z: 0}
+    PositionDamping: {x: 0, y: 0, z: 1}
     AngularDampingMode: 0
     RotationDamping: {x: 0, y: 0, z: 0}
     QuaternionDamping: 1
@@ -2340,7 +2340,7 @@ Transform:
   m_GameObject: {fileID: 184842332}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5144958, y: -0.000001417442, z: 0.0000008934704, w: 0.8574929}
-  m_LocalPosition: {x: 6.42, y: 16, z: -61.81}
+  m_LocalPosition: {x: 6.42, y: 16, z: -64.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4527,7 +4527,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5144958, y: -0.0000013771249, z: 0.000000826275, w: 0.8574929}
-  m_LocalPosition: {x: 6.42, y: 16, z: -61.81}
+  m_LocalPosition: {x: 6.42, y: 16, z: -64.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -24940,7 +24940,7 @@ Transform:
   m_GameObject: {fileID: 1546859729}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.42, y: 1, z: -53.81}
+  m_LocalPosition: {x: 6.42, y: 1, z: -56.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
