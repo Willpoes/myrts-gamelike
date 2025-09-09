@@ -1,0 +1,98 @@
+# --- Unity básicos en cualquier nivel ---
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/[Ll]ogs/
+**/[Mm]emoryCaptures/
+**/[Vv]endor/
+
+# --- Extra de Unity ---
+**/Assets/EffectExamples/
+**/Assets/UnityTechnologies/ParticlePack
+**/Assets/UnityTechnologies/ParticlePack.meta
+
+# --- Siempre mantener los .meta ---
+!/[Aa]ssets/**/*.meta
+
+# --- IDEs ---
+.vs/
+.gradle/
+*.idea
+ExportedObj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity generated meta
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Crash reports
+sysinfo.txt
+mono_crash.*
+
+# Builds
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# Crashlytics
+crashlytics-build.properties
+
+# --- Addressables / Visual Scripting ---
+/ServerData
+/[Aa]ssets/StreamingAssets/aa*
+/[Aa]ssets/AddressableAssetsData/*
+/[Aa]ssets/Unity.VisualScripting.Generated/
+
+# --- Multimedia (ignorar, repo ligero) ---
+*.png
+*.jpg
+*.jpeg
+*.tga
+*.psd
+*.gif
+*.tiff
+*.bmp
+
+*.fbx
+*.obj
+*.blend
+*.dae
+*.3ds
+*.stl
+
+*.wav
+*.mp3
+*.ogg
+*.flac
+
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Configuración de Visual Studio (innecesaria)
+.vsconfig
+
+# Carpeta de tutoriales y ejemplos de Unity
+/[Aa]ssets/TutorialInfo/
+
+# Opcional: ignorar mapas de Input System si no quieres subirlos
+# /[Aa]ssets/*.inputactions
